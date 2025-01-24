@@ -1,0 +1,54 @@
+{
+  "name": "@0to10/aws-dynamodb",
+  "description": "Typescript library for working with DynamoDB with repository structures",
+  "version": "1.0.0",
+  "author": "0TO10 <open-source-software@0to10.nl>",
+  "homepage": "https://0to10.nl",
+  "keywords": [
+    "aws",
+    "dynamodb",
+    "lambda",
+    "repository"
+  ],
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist/"
+  ],
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/tsc -p tsconfig.json && node_modules/.bin/tsc -p tsconfig-cjs.json",
+    "build:clean": "(rm -r dist || true) && npm run build",
+    "lint": "node_modules/.bin/eslint . --ext .ts",
+    "lint:fix": "eslint --fix . --ext .ts",
+    "test": "jest",
+    "prepublishOnly": "npm run build:clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0to10/aws-dynamodb-library-ts.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/0to10/aws-dynamodb-library-ts/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.629.0",
+    "@aws-sdk/util-dynamodb": "~3.606.0",
+    "@jest/globals": "^29.5.0",
+    "@types/aws-lambda": "~8.10.122",
+    "@types/node": "~18.17.19",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-deprecation": "^2.0.0",
+    "jest": "^29.5.0",
+    "license-checker-rseidelsohn": "^4.3.0",
+    "ts-jest": "^29.1.0",
+    "tslib": "^2.2.0"
+  }
+}

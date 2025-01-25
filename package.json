@@ -1,6 +1,6 @@
 {
   "name": "@0to10/aws-dynamodb",
-  "description": "Typescript library for working with DynamoDB with repository structures",
+  "description": "Typescript library for working with DynamoDB tables",
   "version": "1.0.0",
   "author": "0TO10 <open-source-software@0to10.nl>",
   "homepage": "https://0to10.nl",

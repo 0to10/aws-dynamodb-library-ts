@@ -8,7 +8,7 @@ import {Collection} from '../src';
 
 describe('Collection', (): void => {
 
-    test('.create', async (): Promise<void> => {
+    test('.create', (): void => {
         const collection: Collection<any> = Collection.create<any>();
 
         expect(collection).toBeInstanceOf(Array);
@@ -51,7 +51,7 @@ describe('Collection', (): void => {
             ],
             lastEvaluatedKey: undefined,
         },
-    ])('.create($1)', ({items, lastEvaluatedKey}): void => {
+    ])('.create($items)', ({items, lastEvaluatedKey}): void => {
         const collection: Collection<any> = Collection.create<any>(items);
         collection.LastEvaluatedKey = lastEvaluatedKey;
 

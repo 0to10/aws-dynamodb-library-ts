@@ -13,7 +13,7 @@ import {Replacer} from '../Replacer';
  * @copyright Copyright (c) 2025 0TO10 B.V. <https://0to10.nl>
  * @license MIT
  */
-export class ReplacingQueryCommandOutputMapper extends QueryCommandOutputMapper<NativeAttributeValue> {
+export class ReplacingQueryCommandOutputMapper extends QueryCommandOutputMapper {
 
     constructor(
         private readonly replacers: { [key: string]: Replacer | undefined },

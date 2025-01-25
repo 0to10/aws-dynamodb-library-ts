@@ -9,12 +9,12 @@ import {AttributeValue} from '@aws-sdk/client-dynamodb';
  * @copyright Copyright (c) 2025 0TO10 B.V. <https://0to10.nl>
  * @license MIT
  */
-export class Collection<T> extends Array<Record<string, T>> {
+export class Collection<T> extends Array<T> {
 
     public LastEvaluatedKey?: Record<string, AttributeValue>;
 
     private constructor(
-        items: Array<Record<string, T>>,
+        items: Array<T>,
     ) {
         super();
 
@@ -26,7 +26,7 @@ export class Collection<T> extends Array<Record<string, T>> {
     }
 
     public static create<T>(
-        items?: Array<Record<string, T>>,
+        items?: Array<T>,
     ): Collection<T> {
         return new Collection<T>(items || []);
     }

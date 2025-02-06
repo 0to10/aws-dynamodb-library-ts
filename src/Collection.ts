@@ -11,7 +11,7 @@ import {AttributeValue} from '@aws-sdk/client-dynamodb';
  */
 export class Collection<T> extends Array<T> {
 
-    public LastEvaluatedKey?: Record<string, AttributeValue>;
+    public LastEvaluatedKey?: Record<string, AttributeValue> = undefined;
 
     private constructor(
         items: Array<T>,

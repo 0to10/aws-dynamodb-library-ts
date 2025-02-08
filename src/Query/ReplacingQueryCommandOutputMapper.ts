@@ -16,7 +16,7 @@ import {Replacer} from '../Replacer';
 export class ReplacingQueryCommandOutputMapper extends QueryCommandOutputMapper {
 
     constructor(
-        private readonly replacers: { [key: string]: Replacer | undefined },
+        private readonly replacers: { [key: string]: Replacer | undefined } = {},
     ) {
         super();
     }

@@ -1,9 +1,8 @@
 'use strict';
 
-import {Collection} from './Collection';
-import {Repository} from './Repository';
+export {Collection} from './Collection';
+export {Replacer} from './Replacer';
+export {Repository} from './Repository';
 
-export {
-    Collection,
-    Repository,
-};
+export {QueryCommandOutputMapper} from './Query/QueryCommandOutputMapper';
+export {ReplacingQueryCommandOutputMapper} from './Query/ReplacingQueryCommandOutputMapper';

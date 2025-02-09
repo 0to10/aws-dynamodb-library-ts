@@ -1,7 +1,7 @@
 'use strict';
 
 import {DynamoDB, QueryCommandInput, QueryCommandOutput, AttributeValue} from '@aws-sdk/client-dynamodb';
-import {NativeAttributeValue, marshall} from '@aws-sdk/util-dynamodb';
+import {NativeAttributeValue, marshallOptions, marshall} from '@aws-sdk/util-dynamodb';
 
 import {Collection} from './Collection';
 import {QueryCommandOutputMapper} from './Query';
@@ -15,12 +15,23 @@ import {QueryCommandOutputMapper} from './Query';
  */
 export abstract class Repository<T> {
 
+    private readonly marshallOptions: marshallOptions;
+
     protected constructor(
         private readonly db: DynamoDB,
         protected readonly tableName: string,
         protected readonly indexName: string | undefined,
         private readonly outputMapper: QueryCommandOutputMapper<T>,
+        marshallOptions: marshallOptions = {},
     ) {
+        const defaultMarshallOptions: marshallOptions = {
+            convertEmptyValues: false,
+            removeUndefinedValues: false,
+            convertClassInstanceToMap: true,
+            convertTopLevelContainer: false,
+        };
+
+        this.marshallOptions = {...defaultMarshallOptions, ...marshallOptions}
     }
 
     public async findBy(
@@ -32,23 +43,25 @@ export abstract class Repository<T> {
         let ExpressionAttributeNames: Record<string, string> = {};
         let ExpressionAttributeValues: Record<string, AttributeValue> = {};
 
-        for (const criterion in criteria) {
+        for (const [criterion, value] of Object.entries(criteria)) {
             const index: number = keyConditionExpressionParts.length + 1;
 
             ExpressionAttributeNames[`#c${index}`] = criterion;
 
-            let value: NativeAttributeValue = criteria[criterion];
-
-            if (value.endsWith('*')) {
-                value = value.substring(0, value.length - 1);
+            if (
+                'string' === typeof value
+                && value.endsWith('*')
+            ) {
                 keyConditionExpressionParts.push(`begins_with(#c${index}, :c${index})`);
-            } else {
-                keyConditionExpressionParts.push(`#c${index} = :c${index}`);
+
+                const wildcardValue: string = value.substring(0, value.length - 1);
+                ExpressionAttributeValues[`:c${index}`] = this.marshall(wildcardValue);
+
+                continue;
             }
 
-            ExpressionAttributeValues[`:c${index}`] = marshall(value, {
-                // TODO set `marshall` options
-            });
+            keyConditionExpressionParts.push(`#c${index} = :c${index}`);
+            ExpressionAttributeValues[`:c${index}`] = this.marshall(value);
         }
 
         return this.query({
@@ -66,10 +79,7 @@ export abstract class Repository<T> {
     public async findOneBy(
         criteria: Record<string, any>,
     ): Promise<T | undefined> {
-        return this.findBy(
-            criteria,
-            1,
-        ).then(result => result[0]);
+        return this.findBy(criteria, 1).then(result => result[0]);
     }
 
     protected async query(
@@ -83,6 +93,8 @@ export abstract class Repository<T> {
 
         return this.db.query(query, {}).then(
             (data: QueryCommandOutput): Collection<T> => {
+                console.timeEnd(label);
+
                 data.Items?.forEach(item => {
                     result.push(this.outputMapper.map(item))
                 });
@@ -92,10 +104,16 @@ export abstract class Repository<T> {
                 return result;
             },
             (error: any): Collection<T> => {
+                console.timeEnd(label);
+
                 console.error('Error while running query:', error);
                 return result;
             }
         );
+    }
+
+    private marshall(value: NativeAttributeValue): AttributeValue {
+        return marshall(value, this.marshallOptions);
     }
 
 }

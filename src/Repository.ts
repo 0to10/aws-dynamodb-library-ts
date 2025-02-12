@@ -21,7 +21,7 @@ export abstract class Repository<T> {
         private readonly db: DynamoDB,
         protected readonly tableName: string,
         protected readonly indexName: string | undefined,
-        private readonly outputMapper: QueryCommandOutputMapper<T>,
+        private readonly outputMapper: QueryCommandOutputMapper,
         marshallOptions: marshallOptions = {},
     ) {
         const defaultMarshallOptions: marshallOptions = {
@@ -31,7 +31,7 @@ export abstract class Repository<T> {
             convertTopLevelContainer: false,
         };
 
-        this.marshallOptions = {...defaultMarshallOptions, ...marshallOptions}
+        this.marshallOptions = {...defaultMarshallOptions, ...marshallOptions};
     }
 
     public async findBy(
@@ -82,6 +82,8 @@ export abstract class Repository<T> {
         return this.findBy(criteria, 1).then(result => result[0]);
     }
 
+    protected abstract hydrate(item: Record<string, NativeAttributeValue>): T;
+
     protected async query(
         query: QueryCommandInput,
     ): Promise<Collection<T>> {
@@ -96,7 +98,10 @@ export abstract class Repository<T> {
                 console.timeEnd(label);
 
                 data.Items?.forEach(item => {
-                    result.push(this.outputMapper.map(item))
+                    const mapped: Record<string, NativeAttributeValue> = this.outputMapper.map(item);
+                    const hydrated: T = this.hydrate(mapped);
+
+                    result.push(hydrated);
                 });
 
                 result.LastEvaluatedKey = data.LastEvaluatedKey;

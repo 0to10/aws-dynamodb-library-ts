@@ -4,11 +4,10 @@
 import {describe, expect, jest, test, beforeEach, afterEach} from '@jest/globals';
 
 import {DynamoDB, QueryCommandInput, QueryCommandOutput} from '@aws-sdk/client-dynamodb';
+import {marshall, NativeAttributeValue} from '@aws-sdk/util-dynamodb';
 import {HttpHandlerOptions} from '@smithy/types';
 
-import {Repository, Collection} from '../src';
-import {ReplacingQueryCommandOutputMapper} from '../src/Query';
-import {marshall} from '@aws-sdk/util-dynamodb';
+import {Repository, Collection, ReplacingQueryCommandOutputMapper} from '../src';
 
 jest.mock('@aws-sdk/client-dynamodb');
 
@@ -20,6 +19,10 @@ const repository = new class extends Repository<any> {
             'the-index',
             new ReplacingQueryCommandOutputMapper(),
         );
+    }
+
+    protected hydrate(item: Record<string, NativeAttributeValue>): any {
+        return item;
     }
 }
 

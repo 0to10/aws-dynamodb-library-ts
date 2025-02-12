@@ -3,10 +3,11 @@
 // @ts-ignore
 import {describe, expect, test} from '@jest/globals';
 
-import {QueryCommandOutputMapper} from '../../src/Query';
 import {AttributeValue} from '@aws-sdk/client-dynamodb';
 
-class StubQueryCommandOutputMapper extends QueryCommandOutputMapper<any> {
+import {QueryCommandOutputMapper} from '../../src/';
+
+class StubQueryCommandOutputMapper extends QueryCommandOutputMapper {
     public map(item: Record<string, AttributeValue>): Record<string, any> {
         return this.unmarshall(item);
     }
@@ -15,7 +16,7 @@ class StubQueryCommandOutputMapper extends QueryCommandOutputMapper<any> {
 
 describe('QueryCommandOutputMapper', (): void => {
 
-    const mapper: QueryCommandOutputMapper<any> = new StubQueryCommandOutputMapper();
+    const mapper: QueryCommandOutputMapper = new StubQueryCommandOutputMapper();
 
     test.each([
         {

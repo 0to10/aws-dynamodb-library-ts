@@ -6,3 +6,6 @@ export {Repository} from './Repository';
 
 export {QueryCommandOutputMapper} from './Query/QueryCommandOutputMapper';
 export {ReplacingQueryCommandOutputMapper} from './Query/ReplacingQueryCommandOutputMapper';
+
+export {ObjectIdentity} from './Values/ObjectIdentity';
+export {SecurityIdentity} from './Values/SecurityIdentity';

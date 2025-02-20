@@ -47,6 +47,14 @@ describe('ObjectIdentity', (): void => {
             expectedId: undefined,
             expectedObject: 'just-a-type',
         },
+        {
+            item: {
+                identifier: 'CamelCase|01af80d4-8030-494d-b017-e907b4760a49',
+            },
+            key: 'identifier',
+            expectedId: '01af80d4-8030-494d-b017-e907b4760a49',
+            expectedObject: 'camel_case',
+        },
     ])('.replacer($item)', ({
         item,
         key,

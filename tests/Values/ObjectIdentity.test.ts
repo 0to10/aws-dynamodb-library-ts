@@ -55,6 +55,14 @@ describe('ObjectIdentity', (): void => {
             expectedId: '01af80d4-8030-494d-b017-e907b4760a49',
             expectedObject: 'camel_case',
         },
+        {
+            item: {
+                id: 'SOMETHINGElse|1234567890',
+            },
+            key: 'id',
+            expectedId: '1234567890',
+            expectedObject: 'something_else',
+        },
     ])('.replacer($item)', ({
         item,
         key,

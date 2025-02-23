@@ -29,7 +29,11 @@ export class ObjectIdentity {
             item.id = identifiers[identifiers.length - 1];
         }
 
-        item.object = identifiers[0].replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+        item.object = identifiers[0]
+            .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+            .replace(/([a-z])([A-Z])/g, '$1_$2')
+            .toLowerCase()
+        ;
 
         return item;
     };
